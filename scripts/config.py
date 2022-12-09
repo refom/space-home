@@ -1,7 +1,7 @@
 
 class Config:
     window = {
-        "caption": "title game",
+        "caption": "Space Home",
         "background_color": (0, 0, 0),
         "base_resolution" : [1024, 576],
         "scaled_resolution" : [640, 360],
