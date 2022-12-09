@@ -1,30 +1,26 @@
 import pygame, random
 
-from scripts.window import Window
+from scripts.Window import Window
+from scripts.Clock import Clock
 from scripts.camera import Camera
-from scripts.objek.planet import Planet
+from scripts.planet_manager import PlanetManager
 from scripts.objek.rocket import Rocket
 
-window = Window()
+Window.init()
+Clock.init()
 camera = Camera()
+planet_manager = PlanetManager()
+planet_manager.generate(15)
 
-list_planet = []
-for i in range(10):
-    x = random.randint(0, 640)
-    y = random.randint(0, 360)
-    planet = Planet((x, y), camera)
-    planet.image = pygame.transform.rotate(planet.image, random.randint(-180, 180))
-    list_planet.append(planet)
-
-
-rocket = Rocket(random.choice(list_planet).rect.center, camera)
+rocket = Rocket(random.choice(planet_manager.planets).rect.center, camera)
 # rocket = Rocket((100, 50), camera)
 
 while True:
+    Clock.update()
     camera.update()
     camera.custom_draw(rocket)
 
-    window.input()
-    window.draw()
+    Window.input()
+    Window.update()
 
 
