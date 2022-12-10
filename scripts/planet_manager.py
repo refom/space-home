@@ -16,7 +16,8 @@ class PlanetManager:
         self.planet_goal = None
         self.groups = Camera.instance
 
-        self.radius_search = 192
+        # self.radius_search = 192
+        self.radius2 = 0
 
         if (PlanetManager.instance == None):
             PlanetManager.instance = self
@@ -54,7 +55,12 @@ class PlanetManager:
 
     # random generate with blue noise/poisson disc sampling
     def generate(self, radius, map_size, try_length=30):
-        random.seed(random.randint(1, 5))
+        # Seed world gen
+        seed = random.randint(1, 5)
+        print(f"seed : {seed}")
+        random.seed(seed)
+
+        self.radius2 = radius * 2
         map_size = map_size
         cell_size = radius / math.sqrt(2)
         maps = [
@@ -128,7 +134,7 @@ class PlanetManager:
         for planet in self.planets:
             distance = Vector2D.Distance(current, planet.position)
 
-            if (distance <= self.radius_search and distance != 0):
+            if (distance <= (self.radius2) and distance != 0):
                 open_planets.append(planet)
 
         return open_planets

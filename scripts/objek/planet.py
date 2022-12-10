@@ -19,9 +19,11 @@ class Planet(pygame.sprite.Sprite):
         
         self.visible = True
         self.is_resource = False
+        self.collected = False
+        
         self.position = Vector2D(pos)
         self.angle = 0
-        self.rotate_direction = 0.01 if (random.random() > 0.5) else -0.01
+        self.rotate_direction = 0.02 if (random.random() > 0.5) else -0.02
 
     def rotate_image(self):
         self.angle += self.rotate_direction
@@ -40,10 +42,10 @@ class Planet(pygame.sprite.Sprite):
         if (self.collider.collidepoint(pos)):
             pygame.draw.circle(
                 Window.display,
-                (0,255,0),
+                (0,192,0),
                 Camera.instance.world_to_screen_point(self.collider.center),
-                self.collider.w/3,
-                width=1
+                radius = self.collider.w / 3,
+                width = 1
             )
 
     def update(self):

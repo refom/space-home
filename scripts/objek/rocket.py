@@ -21,6 +21,10 @@ class Rocket(pygame.sprite.Sprite):
 
         self.path = []
         self.speed = 100
+        self.radar_radius = PlanetManager.instance.radius2
+
+        self.timer_radar = 0
+        self.timer_radar_cooldown = 0
 
     def input(self):
         if (not self.can_move): return
@@ -33,14 +37,15 @@ class Rocket(pygame.sprite.Sprite):
             self.is_click = False
 
     def movement(self):
-        if (Vector2D.Distance(self.position, self.target_pos) < self.speed * Clock.delta_time):
+        if self.is_arrive():
             self.can_move = True
 
+        # masih ada target tujuan
         if (len(self.path) > 1):
             self.can_move = False
             self.target_pos = self.path[1].position
 
-            if (Vector2D.Distance(self.position, self.target_pos) < self.speed * Clock.delta_time):
+            if self.is_arrive():
                 self.path.pop(0)
 
         self.position = Vector2D.MoveTowards(self.position, self.target_pos, self.speed * Clock.delta_time)
@@ -53,30 +58,57 @@ class Rocket(pygame.sprite.Sprite):
         # dikurang 90 biar angleny mulai dari kanan
         self.image = pygame.transform.rotate(self.img, -angle - 90)
 
-        # Radius Search
-        pygame.draw.circle(
-            Camera.instance.display,
-            (100, 100, 0),
-            Camera.instance.world_to_screen_point(self.position),
-            PlanetManager.instance.radius_search,
-            width=1
-        )
-        # Path
+        self.radar_loop()
+        self.path_loop()
+
+    def check_event(self):
+        # cek apakah berada di planet resource
+        if (not self.can_move): return
+        planet = self.get_current_planet()
+        if (planet == None): return
+
+
+    def update(self):
+        self.input()
+        self.movement()
+        # self.check_event()
+        self.render()
+        self.rect.center = self.position
+    
+    def path_loop(self):
+        # Draw line path
         for i in range(len(self.path) - 1):
             pygame.draw.line(
                 Camera.instance.display,
-                (255,255,255),
+                (100,100,100),
                 Camera.instance.world_to_screen_point(self.path[i].position),
                 Camera.instance.world_to_screen_point(self.path[i+1].position),
                 width=1
             )
 
-    def update(self):
-        self.input()
-        self.movement()
-        self.render()
-        self.rect.center = self.position
-    
+    def radar_loop(self):
+        if (self.timer_radar_cooldown > 0):
+            self.timer_radar_cooldown -= self.speed * Clock.delta_time
+            return
+
+        self.timer_radar += Clock.delta_time
+        if (self.timer_radar > 1):
+            self.timer_radar -= 1
+            self.timer_radar_cooldown += self.radar_radius
+            
+        # Radius dan width circle for radar
+        timer = Vector2D.EaseOutCubic(self.timer_radar)
+        radius = timer * self.radar_radius
+        width = (1 - timer) * self.radar_radius
+
+        pygame.draw.circle(
+            Camera.instance.display,
+            (100, 100, 0),
+            Camera.instance.world_to_screen_point(self.position),
+            radius = radius,
+            width = math.ceil(width)
+        )
+
     def is_arrive(self):
         if (Vector2D.Distance(self.position, self.target_pos) <= (self.speed * Clock.delta_time)):
             return True
