@@ -17,6 +17,8 @@ class Planet(pygame.sprite.Sprite):
             center = pos
         )
         
+        self.visible = True
+        self.is_resource = False
         self.position = Vector2D(pos)
         self.angle = 0
         self.rotate_direction = 0.01 if (random.random() > 0.5) else -0.01
@@ -40,10 +42,13 @@ class Planet(pygame.sprite.Sprite):
                 Window.display,
                 (0,255,0),
                 Camera.instance.world_to_screen_point(self.collider.center),
-                self.collider.w/2,
+                self.collider.w/3,
                 width=1
             )
 
     def update(self):
+        if not self.visible:
+            self.image = None
+            return
         self.input()
         self.rotate_image()

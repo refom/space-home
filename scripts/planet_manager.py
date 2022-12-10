@@ -9,8 +9,11 @@ class PlanetManager:
     instance = None
 
     def __init__(self) -> None:
+        self.image_path = []
 
         self.planets = []
+        self.planet_resources = []
+        self.planet_goal = None
         self.groups = Camera.instance
 
         self.radius_search = 192
@@ -19,9 +22,35 @@ class PlanetManager:
             PlanetManager.instance = self
     
     def spawn_planet(self, pos):
-        planet = Planet(pos, 'assets/planet.png', self.groups, (32, 32))
+        # last item adalah path ke planet goal
+        end = len(self.image_path) - 2
+        if (self.planet_goal == None):
+            end = len(self.image_path) - 1
+        index = random.randint(0, random.randint(0, random.randint(0, end)))
+
+        planet = Planet(pos, self.image_path[index], self.groups, (32, 32))
         planet.angle = random.randint(-180, 180)
+
+        # jika planet goal
+        if (index == len(self.image_path) - 1):
+            planet.visible = False
+            self.planet_goal = planet
+            return
+        # jika planet resource
+        elif (index != 0 and index != len(self.image_path) - 1):
+            planet.is_resource = True
+            self.planet_resources.append(planet)
+
         self.planets.append(planet)
+    
+    def add_image(self, path):
+        self.image_path.append(path)
+    
+    def get_neutral_planet(self):
+        while True:
+            index = random.randint(0, len(self.planets))
+            if (self.planets[index] not in self.planet_resources):
+                return self.planets[index]
 
     # random generate with blue noise/poisson disc sampling
     def generate(self, radius, map_size, try_length=30):
@@ -58,9 +87,12 @@ class PlanetManager:
             if (not candidate_accepted):
                 del spawn_points[spawn_index]
         
-        print(f"Planets : {len(points)}")
         for i in range(len(points)):
             self.spawn_planet(points[i])
+        
+        print(f"Planets : {len(points)}")
+        print(f"Planet Resources : {len(self.planet_resources)}")
+        print(f"Planet Goal : {self.planet_goal}, {self.planet_goal.position}")
 
     def is_valid(self, candidate, radius, points, map_size, cell_size, maps):
         # in maps

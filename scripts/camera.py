@@ -31,6 +31,7 @@ class Camera(pygame.sprite.Group):
             self.camera_target_center(target)
 
         for sprite in self.sprites():
+            if not sprite.image: continue
             offset_pos = sprite.rect.topleft - self.offset
             self.display.blit(sprite.image, offset_pos)
 

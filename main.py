@@ -12,9 +12,17 @@ Clock.init()
 Font.init()
 camera = Camera()
 planet_manager = PlanetManager()
+
+# Neutral
+planet_manager.add_image('assets/planet.png')
+# Resource
+planet_manager.add_image('assets/mars.png')
+planet_manager.add_image('assets/neptune.png')
+# Goal
+planet_manager.add_image('assets/earth.png')
 planet_manager.generate(96, (Window.base_resolution[0] * 3, Window.base_resolution[1] * 3), 5)
 
-rocket = Rocket(random.choice(planet_manager.planets).rect.center, camera)
+rocket = Rocket(planet_manager.get_neutral_planet().position, camera)
 # rocket = Rocket((100, 50), camera)
 
 while True:
