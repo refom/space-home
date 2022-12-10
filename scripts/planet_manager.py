@@ -13,12 +13,8 @@ class PlanetManager:
         self.planets = []
         self.groups = Camera.instance
 
-        self.radius_search = 256
+        self.radius_search = 192
 
-        self.map_size = ()
-        self.cell_size = 0
-        self.maps = []
-        
         if (PlanetManager.instance == None):
             PlanetManager.instance = self
     
@@ -30,11 +26,11 @@ class PlanetManager:
     # random generate with blue noise/poisson disc sampling
     def generate(self, radius, map_size, try_length=30):
         random.seed(random.randint(1, 5))
-        self.map_size = map_size
-        self.cell_size = radius / math.sqrt(2)
-        self.maps = [
-            [0 for _ in range(math.ceil(map_size[1] / self.cell_size))]
-            for _ in range(math.ceil(map_size[0] / self.cell_size))
+        map_size = map_size
+        cell_size = radius / math.sqrt(2)
+        maps = [
+            [0 for _ in range(math.ceil(map_size[1] / cell_size))]
+            for _ in range(math.ceil(map_size[0] / cell_size))
         ]
 
         points = []
@@ -53,10 +49,10 @@ class PlanetManager:
                 candidate = spawn_center + dir * random.randint(radius, 2*radius)
 
                 # cek apakah jarak random point dekat dengan spawn point
-                if (self.is_valid(candidate, radius, points)):
+                if (self.is_valid(candidate, radius, points, map_size, cell_size, maps)):
                     points.append(candidate)
                     spawn_points.append(candidate)
-                    self.maps[int(candidate.x / self.cell_size)][int(candidate.y / self.cell_size)] = len(points)
+                    maps[int(candidate.x / cell_size)][int(candidate.y / cell_size)] = len(points)
                     candidate_accepted = True
                     break
             if (not candidate_accepted):
@@ -66,25 +62,25 @@ class PlanetManager:
         for i in range(len(points)):
             self.spawn_planet(points[i])
 
-    def is_valid(self, candidate, radius, points):
+    def is_valid(self, candidate, radius, points, map_size, cell_size, maps):
         # in maps
         if (candidate.x > 0 and
-            candidate.x < self.map_size[0] and
+            candidate.x < map_size[0] and
             candidate.y > 0 and
-            candidate.y < self.map_size[1]):
+            candidate.y < map_size[1]):
             
-            cell_x = int(candidate.x / self.cell_size)
-            cell_y = int(candidate.y / self.cell_size)
+            cell_x = int(candidate.x / cell_size)
+            cell_y = int(candidate.y / cell_size)
 
             search_start_x = max(0, cell_x - 2)
-            search_end_x = min(cell_x + 2, len(self.maps))
+            search_end_x = min(cell_x + 2, len(maps))
 
             search_start_y = max(0, cell_y - 2)
-            search_end_y = min(cell_y + 2, len(self.maps[0]))
+            search_end_y = min(cell_y + 2, len(maps[0]))
 
             for x in range(search_start_x, search_end_x):
                 for y in range(search_start_y, search_end_y):
-                    point_index = self.maps[x][y] - 1
+                    point_index = maps[x][y] - 1
                     if (point_index != -1):
                         sqr_dist = (candidate - points[point_index]).magnitude_squared()
                         if (sqr_dist < radius * radius):

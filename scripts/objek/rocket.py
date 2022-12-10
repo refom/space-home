@@ -5,7 +5,7 @@ from ..camera import Camera
 from ..Vector import Vector2D
 from ..planet_manager import PlanetManager
 
-from ..astar import AStar
+from ..AStar import AStar
 
 class Rocket(pygame.sprite.Sprite):
     def __init__(self, pos, groups):
@@ -16,22 +16,28 @@ class Rocket(pygame.sprite.Sprite):
 
         self.position = Vector2D(pos)
         self.target_pos = Vector2D(pos)
-        self.isClick = False
+        self.is_click = False
+        self.can_move = True
 
         self.path = []
         self.speed = 100
 
     def input(self):
+        if (not self.can_move): return
         click = pygame.mouse.get_pressed()
 
-        if (click[0] == 1 and not self.isClick):
-            self.isClick = True
+        if (click[0] == 1 and not self.is_click):
+            self.is_click = True
             self.set_target()
-        elif (click[0] == 0 and self.isClick):
-            self.isClick = False
+        elif (click[0] == 0 and self.is_click):
+            self.is_click = False
 
     def movement(self):
+        if (Vector2D.Distance(self.position, self.target_pos) < self.speed * Clock.delta_time):
+            self.can_move = True
+
         if (len(self.path) > 1):
+            self.can_move = False
             self.target_pos = self.path[1].position
 
             if (Vector2D.Distance(self.position, self.target_pos) < self.speed * Clock.delta_time):
@@ -82,16 +88,17 @@ class Rocket(pygame.sprite.Sprite):
         planet_collide = PlanetManager.instance.check_collision(pos)
         # print(f"planet collide: {planet_collide}")
 
-        # if get planet, set target to planet
+        # cek kalau yang di klik adalah planet
         if (len(planet_collide) < 1): return
-        # search path to target
         current_planet = self.get_current_planet() # Planet object
         if (current_planet == None): return
 
+        # Search path to planet target
         path_planets = AStar.search(current_planet, planet_collide[0])
         if (not path_planets): return
         print(f"Planet Path: {[planet.position for planet in path_planets]}")
         self.path = path_planets
+        self.can_move = False
 
         # self.target_pos = planet_collide[0].rect.center
         # print(self.target_pos)
