@@ -17,6 +17,10 @@ def lerp(current, target, delta):
 
 class Vector2D(Vector2):
     @classmethod
+    def Addition(cls, current, target):
+        return Vector2(current[0] + target[0], current[1] + target[1])
+
+    @classmethod
     def Subtraction(cls, current, target):
         return Vector2(current[0] - target[0], current[1] - target[1])
     

@@ -1,13 +1,21 @@
 
 import pygame, random
-from ..vector import Vector2D
+from ..Window import Window
+from ..camera import Camera
+from ..Vector import Vector2D
 
 class Planet(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, img_path, groups, collider=(10, 10)):
         super().__init__(groups)
-        self.img = pygame.image.load('assets/planet.png').convert_alpha()
-        self.image = self.img.copy()
+        self.image_source = pygame.image.load(img_path).convert_alpha()
+        self.image = self.image_source.copy()
         self.rect = self.image.get_rect(center = pos)
+
+        self.collider = self.image.get_rect(
+            width = self.rect.w + collider[0],
+            height = self.rect.h + collider[1],
+            center = pos
+        )
         
         self.position = Vector2D(pos)
         self.angle = 0
@@ -20,9 +28,22 @@ class Planet(pygame.sprite.Sprite):
         elif (self.angle <= -180):
             self.angle += 180
 
-        self.image = pygame.transform.rotate(self.img, self.angle)
+        self.image = pygame.transform.rotate(self.image_source, self.angle)
         self.rect = self.image.get_rect(center = self.position)
 
+    def input(self):
+        pos = Camera.instance.screen_to_world_point(pygame.mouse.get_pos())
+
+        # Hover
+        if (self.collider.collidepoint(pos)):
+            pygame.draw.circle(
+                Window.display,
+                (0,255,0),
+                Camera.instance.world_to_screen_point(self.collider.center),
+                self.collider.w/2,
+                width=1
+            )
 
     def update(self):
+        self.input()
         self.rotate_image()
