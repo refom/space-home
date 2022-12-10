@@ -9,3 +9,4 @@ class Config:
         "fps": 60,
     }
 
+

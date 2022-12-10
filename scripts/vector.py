@@ -15,6 +15,7 @@ def get_magnitude(x, y):
 def lerp(current, target, delta):
     return current + delta * (target - current)
 
+
 class Vector2D(Vector2):
     @classmethod
     def NormalizePoint(cls, x, max_value = 1, min_value = 0):
