@@ -5,6 +5,7 @@ from .Font import Font
 from .Clock import Clock
 from .camera import Camera
 from .Window import Window
+from .Background import Background
 from .objek.rocket import Rocket
 from .PlanetManager import PlanetManager
 from .GameManager import GameManager
@@ -32,6 +33,7 @@ class Menu:
 
     @classmethod
     def update(cls):
+        Background.update()
         if (cls.scene == 0):
             cls.scene_default()
         elif (cls.scene == 1):
@@ -101,8 +103,9 @@ class Menu:
 
         if (GameManager.win): return
         times_sec = (Clock.get_current_time_s() % 60)
-        times_min = math.floor(times_sec / 60)
+        times_min = (math.floor(times_sec / 60) % 60)
         timer = Font.text.render(f"{times_min} : {times_sec}", False, (255,255,255))
         timer_rect = timer.get_rect(midtop = (Window.display.get_width()/2, 20))
         Window.display.blit(timer, timer_rect)
+
 
