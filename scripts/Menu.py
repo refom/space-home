@@ -50,6 +50,10 @@ class Menu:
         click = Font.head.render("Click anywhere to Play", False, (255,255,255))
         click_rect = click.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/2))
         Window.display.blit(click, click_rect)
+        
+        quit = Font.head.render("Press ESC to quit the game", False, (255,255,255))
+        quit_rect = quit.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/2 + 250 ))
+        Window.display.blit(quit, quit_rect)
 
     @classmethod
     def scene_gameplay(cls):
