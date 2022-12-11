@@ -4,7 +4,7 @@ import pygame, math
 from .Font import Font
 from .Clock import Clock
 from .camera import Camera
-from .Window import Window
+from .window import Window
 from .objek.rocket import Rocket
 from .PlanetManager import PlanetManager
 from .GameManager import GameManager

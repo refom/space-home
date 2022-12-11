@@ -1,6 +1,6 @@
 
 import pygame, sys
-from .Config import Config
+from .config import Config
 
 class Window:
     base_resolution = None

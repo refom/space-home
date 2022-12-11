@@ -2,11 +2,11 @@
 import pygame, math
 from ..Clock import Clock
 from ..camera import Camera
-from ..Vector import Vector2D
+from ..vector import Vector2D
 from ..GameManager import GameManager
 from ..PlanetManager import PlanetManager
 
-from ..AStar import AStar
+from ..astar import AStar
 
 class Rocket(pygame.sprite.Sprite):
     def __init__(self, pos, groups):

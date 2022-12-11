@@ -1,5 +1,4 @@
-
-from scripts.Window import Window
+from scripts.window import Window
 from scripts.Clock import Clock
 from scripts.Font import Font
 from scripts.Menu import Menu

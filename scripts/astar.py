@@ -1,6 +1,6 @@
 
 from .PlanetManager import PlanetManager
-from .Vector import Vector2D
+from .vector import Vector2D
 
 class AStar:
     # h = heuristic

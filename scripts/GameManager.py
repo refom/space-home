@@ -1,6 +1,6 @@
 
 import pygame, random, math
-from .Window import Window
+from .window import Window
 from .Font import Font
 from .Clock import Clock
 from .PlanetManager import PlanetManager
