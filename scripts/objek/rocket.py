@@ -87,7 +87,15 @@ class Rocket(pygame.sprite.Sprite):
 
         # apakah planet goal
         if (self.current_planet == PlanetManager.instance.planet_goal):
+            # win
             GameManager.win_condition()
+            self.active = False
+            return
+
+        # apakah ada enemy sampai di planet ini
+        if (self.current_planet.is_enemy_arrive):
+            # dead
+            GameManager.lose_condition()
             self.active = False
             return
 

@@ -26,9 +26,9 @@ class Menu:
     def change_menu(cls):
         if (cls.scene == 0):
             cls.scene = 1
-        if (cls.scene == 1 and GameManager.win):
+        if (cls.scene == 1 and GameManager.game_state != 0):
             cls.scene = 0
-            GameManager.win = False
+            GameManager.game_state = 0
             cls.init_game = False
 
     @classmethod
@@ -58,12 +58,13 @@ class Menu:
         if (not cls.init_game):
             cls.init_gameplay()
         
+        GameManager.update_enemy()
         Camera.instance.update()
         Camera.instance.custom_draw(GameManager.player)
         cls.draw_text_gameplay()
 
-        if (GameManager.win):
-            GameManager.scene_win()
+        if (GameManager.game_state != 0):
+            GameManager.scene_game_over()
 
     @classmethod
     def init_gameplay(cls):
@@ -101,10 +102,10 @@ class Menu:
         resource_rect = fps.get_rect(topleft = (20, 20))
         Window.display.blit(resource, resource_rect)
 
-        if (GameManager.win): return
+        if (GameManager.game_state != 0): return
         times_sec = (Clock.get_current_time_s() % 60)
-        times_min = (math.floor(times_sec / 60) % 60)
-        timer = Font.text.render(f"{times_min} : {times_sec}", False, (255,255,255))
+        times_min = math.floor(Clock.get_current_time_s() / 60)
+        timer = Font.text.render(f"{times_min:02d} : {times_sec:02d}", False, (255,255,255))
         timer_rect = timer.get_rect(midtop = (Window.display.get_width()/2, 20))
         Window.display.blit(timer, timer_rect)
 

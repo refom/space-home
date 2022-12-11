@@ -1,5 +1,5 @@
 
-import pygame, random
+import pygame, random, math
 from .Window import Window
 from .camera import Camera
 from .Vector import Vector2D
@@ -25,7 +25,7 @@ class Background:
     def init(cls):
         cls.width = Window.base_resolution[0] * 2
         cls.height = Window.base_resolution[1] * 2
-        for _ in range(Window.scaled_resolution[0] // 1.5):
+        for _ in range(math.ceil(Window.scaled_resolution[0] // 1.5)):
             x = random.randint(-cls.width, cls.width)
             y = random.randint(-cls.height, cls.height)
             z = random.random() / 2

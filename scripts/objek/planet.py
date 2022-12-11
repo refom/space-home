@@ -20,6 +20,8 @@ class Planet(pygame.sprite.Sprite):
         self.collected = False
         self.is_resource = False
         self.is_hover = False
+        self.is_enemy_exist = False
+        self.is_enemy_arrive = False
         
         self.resource_cooldown = 0
         self.angle = 0
