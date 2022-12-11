@@ -2,7 +2,7 @@
 import random, math
 from .objek.planet import Planet
 from .camera import Camera
-from .vector import Vector2D
+from .Vector import Vector2D
 
 class PlanetManager:
     # Singleton
