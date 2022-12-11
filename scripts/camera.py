@@ -1,6 +1,6 @@
 
 import pygame
-from .window import Window
+from .Window import Window
 from .Clock import Clock
 from .Vector import Vector2D
 
@@ -42,3 +42,6 @@ class Camera(pygame.sprite.Group):
 
     def world_to_screen_point(self, point):
         return point - self.offset
+
+    def parallax_point(self, point, strength):
+        return point - (self.offset * strength)

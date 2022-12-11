@@ -1,9 +1,10 @@
 
-from scripts.window import Window
+from scripts.Window import Window
 from scripts.Clock import Clock
 from scripts.Font import Font
 from scripts.Menu import Menu
 from scripts.camera import Camera
+from scripts.Background import Background
 from scripts.PlanetManager import PlanetManager
 from scripts.music import music
 
@@ -15,6 +16,7 @@ music()
 camera = Camera()
 planet_manager = PlanetManager()
 
+Background.init()
 while True:
     Clock.update()
     events = Window.input()

@@ -1,10 +1,11 @@
 
-import pygame, math
+import pygame, math, random
 
 from .Font import Font
 from .Clock import Clock
 from .camera import Camera
-from .window import Window
+from .Window import Window
+from .Background import Background
 from .objek.rocket import Rocket
 from .PlanetManager import PlanetManager
 from .GameManager import GameManager
@@ -25,13 +26,14 @@ class Menu:
     def change_menu(cls):
         if (cls.scene == 0):
             cls.scene = 1
-        if (cls.scene == 1 and GameManager.win):
+        if (cls.scene == 1 and GameManager.game_state != 0):
             cls.scene = 0
-            GameManager.win = False
+            GameManager.game_state = 0
             cls.init_game = False
 
     @classmethod
     def update(cls):
+        Background.update()
         if (cls.scene == 0):
             cls.scene_default()
         elif (cls.scene == 1):
@@ -60,12 +62,13 @@ class Menu:
         if (not cls.init_game):
             cls.init_gameplay()
         
+        GameManager.update_enemy()
         Camera.instance.update()
         Camera.instance.custom_draw(GameManager.player)
         cls.draw_text_gameplay()
 
-        if (GameManager.win):
-            GameManager.scene_win()
+        if (GameManager.game_state != 0):
+            GameManager.scene_game_over()
 
     @classmethod
     def init_gameplay(cls):
@@ -76,8 +79,8 @@ class Menu:
         # Neutral | image path , jumlah
         PlanetManager.instance.add_image('assets/planet.png', -1)
         # Resource
-        PlanetManager.instance.add_image('assets/mars.png', 1)
-        PlanetManager.instance.add_image('assets/neptune.png', 0)
+        PlanetManager.instance.add_image('assets/mars.png', random.randint(10, 40))
+        PlanetManager.instance.add_image('assets/neptune.png', random.randint(10, 20))
         # Goal
         PlanetManager.instance.add_image('assets/earth.png', -1)
 
@@ -103,10 +106,11 @@ class Menu:
         resource_rect = fps.get_rect(topleft = (20, 20))
         Window.display.blit(resource, resource_rect)
 
-        if (GameManager.win): return
+        if (GameManager.game_state != 0): return
         times_sec = (Clock.get_current_time_s() % 60)
-        times_min = math.floor(times_sec / 60)
-        timer = Font.text.render(f"{times_min} : {times_sec}", False, (255,255,255))
+        times_min = math.floor(Clock.get_current_time_s() / 60)
+        timer = Font.text.render(f"{times_min:02d} : {times_sec:02d}", False, (255,255,255))
         timer_rect = timer.get_rect(midtop = (Window.display.get_width()/2, 20))
         Window.display.blit(timer, timer_rect)
+
 
