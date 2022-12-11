@@ -1,8 +1,8 @@
 
 import pygame
-from .Window import Window
+from .window import Window
 from .Clock import Clock
-from .Vector import Vector2D
+from .vector import Vector2D
 
 class Camera(pygame.sprite.Group):
     # Singleton

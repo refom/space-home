@@ -1,6 +1,6 @@
 
 import pygame, math
-from .Config import Config
+from .config import Config
 
 class Clock:
     fps = None

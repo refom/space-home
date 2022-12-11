@@ -1,7 +1,7 @@
 
 import pygame, random
 from ..camera import Camera
-from ..Vector import Vector2D
+from ..vector import Vector2D
 
 class Planet(pygame.sprite.Sprite):
     def __init__(self, pos, img_path, groups, collider=(10, 10)):

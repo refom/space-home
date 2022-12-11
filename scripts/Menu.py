@@ -4,7 +4,7 @@ import pygame, math
 from .Font import Font
 from .Clock import Clock
 from .camera import Camera
-from .Window import Window
+from .window import Window
 from .objek.rocket import Rocket
 from .PlanetManager import PlanetManager
 from .GameManager import GameManager
@@ -43,7 +43,7 @@ class Menu:
 
     @classmethod
     def draw_text_menu(cls):
-        title = Font.title.render("Space Home", False, (255,255,255))
+        title = pygame.image.load('assets/logo.png')
         title_rect = title.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/3))
         Window.display.blit(title, title_rect)
 
