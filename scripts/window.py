@@ -28,17 +28,19 @@ class Window:
         cls.screen = pygame.display.set_mode(cls.base_resolution)
         pygame.display.set_caption(Config.window["caption"])
 
-        pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
+        pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP, pygame.MOUSEBUTTONUP])
 
     @classmethod
     def input(cls):
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+        return events
 
     @classmethod
     def update(cls):

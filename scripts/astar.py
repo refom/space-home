@@ -1,5 +1,5 @@
 
-from .planet_manager import PlanetManager
+from .PlanetManager import PlanetManager
 from .Vector import Vector2D
 
 class AStar:

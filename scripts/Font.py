@@ -2,10 +2,14 @@
 import pygame
 
 class Font:
-    font = None
+    text = None
+    title = None
+    head = None
 
     @classmethod
     def init(cls):
         pygame.font.init()
-        cls.font = pygame.font.SysFont('Comic Sans MS', 20)
+        cls.text = pygame.font.SysFont('Comic Sans MS', 14)
+        cls.title = pygame.font.SysFont('Comic Sans MS', 44)
+        cls.head = pygame.font.SysFont('Comic Sans MS', 18)
 
