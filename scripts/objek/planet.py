@@ -22,7 +22,6 @@ class Planet(pygame.sprite.Sprite):
         self.is_hover = False
         
         self.resource_cooldown = 0
-        self.border_width = 2
         self.angle = 0
         self.rotate_direction = 0.02 if (random.random() > 0.5) else -0.02
         self.position = Vector2D(pos)
