@@ -3,7 +3,8 @@ import pygame, math
 from ..Clock import Clock
 from ..camera import Camera
 from ..Vector import Vector2D
-from ..planet_manager import PlanetManager
+from ..GameManager import GameManager
+from ..PlanetManager import PlanetManager
 
 from ..AStar import AStar
 
@@ -14,17 +15,24 @@ class Rocket(pygame.sprite.Sprite):
         self.image = self.img.copy()
         self.rect = self.image.get_rect(center = pos)
 
+        self.active = True
         self.position = Vector2D(pos)
         self.target_pos = Vector2D(pos)
         self.is_click = False
         self.can_move = True
 
         self.path = []
+        self.current_planet = None
         self.speed = 100
+        self.arrow_color = {
+            "default": (244, 157, 26),
+            "goal": (173, 231, 146),
+        }
         self.radar_radius = PlanetManager.instance.radius2
 
         self.timer_radar = 0
         self.timer_radar_cooldown = 0
+        self.timer_resource = 0
 
     def input(self):
         if (not self.can_move): return
@@ -58,24 +66,56 @@ class Rocket(pygame.sprite.Sprite):
         # dikurang 90 biar angleny mulai dari kanan
         self.image = pygame.transform.rotate(self.img, -angle - 90)
 
-        self.radar_loop()
-        self.path_loop()
+        self.draw_radar()
+        self.draw_path()
+        self.draw_arrow()
 
     def check_event(self):
-        # cek apakah berada di planet resource
-        if (not self.can_move): return
-        planet = self.get_current_planet()
-        if (planet == None): return
+        # cek apakah sedang jalan
+        if (not self.can_move):
+            self.timer_resource = 0
+            return
 
+        # apakah current planet ada?
+        if (self.current_planet == None):
+            self.current_planet = self.get_current_planet()
+
+        # apakah current planet adalah planet yang sama dengan target
+        if (self.current_planet.position != self.target_pos):
+            print("adalah bukan planet yang sama")
+            self.current_planet = self.get_current_planet()
+
+        # apakah planet goal
+        if (self.current_planet == PlanetManager.instance.planet_goal):
+            GameManager.win_condition()
+            self.active = False
+            return
+
+        # apakah planet resource dan belum diambil
+        if (self.current_planet.collected or not self.current_planet.is_resource):
+            # print("planet sudah diambil atau bukan planet resource")
+            return
+
+        # Cooldown ngambil resource
+        # print("cooldown")
+        self.timer_resource += Clock.delta_time
+        self.current_planet.draw_load_resource(self.timer_resource)
+        if (self.timer_resource >= self.current_planet.resource_cooldown):
+            # resource diambil
+            print("resource diambil")
+            self.current_planet.collected = True
+            self.timer_resource = 0
+            GameManager.resource_collected()
 
     def update(self):
+        if (not self.active): return
         self.input()
         self.movement()
-        # self.check_event()
+        self.check_event()
         self.render()
         self.rect.center = self.position
     
-    def path_loop(self):
+    def draw_path(self):
         # Draw line path
         for i in range(len(self.path) - 1):
             pygame.draw.line(
@@ -86,7 +126,7 @@ class Rocket(pygame.sprite.Sprite):
                 width=1
             )
 
-    def radar_loop(self):
+    def draw_radar(self):
         if (self.timer_radar_cooldown > 0):
             self.timer_radar_cooldown -= self.speed * Clock.delta_time
             return
@@ -107,6 +147,32 @@ class Rocket(pygame.sprite.Sprite):
             Camera.instance.world_to_screen_point(self.position),
             radius = radius,
             width = math.ceil(width)
+        )
+
+    def draw_arrow(self):
+        if (GameManager.open_planet_goal):
+            planet = PlanetManager.instance.planet_goal
+            color = self.arrow_color["goal"]
+        else:
+            planet = PlanetManager.instance.get_closest_resource_planet(self.position)
+            color = self.arrow_color["default"]
+
+        if (planet == None): return
+        if (planet.position == self.target_pos): return
+
+        direction = (planet.position - self.position).normalize()
+        perpendicular = Vector2D.PerpendicularCounterClockwise(direction)
+        offset = self.position + (direction * 23)
+
+        triangle = [
+            Camera.instance.world_to_screen_point(offset + (direction * 17)),
+            Camera.instance.world_to_screen_point(offset + (perpendicular * 9)),
+            Camera.instance.world_to_screen_point(offset + (perpendicular * -9))
+        ]
+        pygame.draw.polygon(
+            Camera.instance.display,
+            color,
+            triangle
         )
 
     def is_arrive(self):
