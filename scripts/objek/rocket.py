@@ -36,7 +36,7 @@ class Rocket(pygame.sprite.Sprite):
         }
         self.radar_radius = PlanetManager.instance.radius2
         
-        self.particle = Particle(
+        self.booster = Particle(
             [(255, 255, 100), (180, 180, 100)],
             lifetime = 0.80,
             radius = (5, 7)
@@ -74,8 +74,8 @@ class Rocket(pygame.sprite.Sprite):
         direction = Vector2D.Subtraction(self.position, self.target_pos).normalize()
         # directiony = Vector2D.MultiplyByPointY(direction, random.randint(5, 10))
         offset = self.position + (direction * 7)
-        self.particle.add_particle(offset, direction)
-        self.particle.add_particle(offset, direction)
+        self.booster.add_particle(offset, direction)
+        self.booster.add_particle(offset, direction)
         # self.particle.add_particle(offset, directiony)
 
         self.position = Vector2D.MoveTowards(self.position, self.target_pos, self.speed * Clock.delta_time)
@@ -88,7 +88,7 @@ class Rocket(pygame.sprite.Sprite):
         # dikurang 90 biar angleny mulai dari kanan
         self.image = pygame.transform.rotate(self.img, -angle - 90)
 
-        self.particle.emit()
+        self.booster.emit()
         self.draw_radar()
         self.draw_path()
         self.draw_arrow()
