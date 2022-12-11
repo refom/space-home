@@ -1,10 +1,11 @@
 
-import pygame, math
+import pygame, math, random
 from ..Clock import Clock
 from ..camera import Camera
 from ..Vector import Vector2D
 from ..GameManager import GameManager
 from ..PlanetManager import PlanetManager
+from ..Particle import Particle
 
 from ..AStar import AStar
 
@@ -22,13 +23,24 @@ class Rocket(pygame.sprite.Sprite):
         self.can_move = True
 
         self.path = []
+        self.last_path = None
         self.current_planet = None
         self.speed = 100
+        self.radar_color = {
+            "default": (100, 100, 0),
+            "goal": (50, 205, 50),
+        }
         self.arrow_color = {
             "default": (244, 157, 26),
             "goal": (173, 231, 146),
         }
         self.radar_radius = PlanetManager.instance.radius2
+        
+        self.particle = Particle(
+            [(255, 255, 100), (180, 180, 100)],
+            lifetime = 0.80,
+            radius = (5, 7)
+        )
 
         self.timer_radar = 0
         self.timer_radar_cooldown = 0
@@ -45,16 +57,26 @@ class Rocket(pygame.sprite.Sprite):
             self.is_click = False
 
     def movement(self):
+        # Saat sampai tujuan
         if self.is_arrive():
             self.can_move = True
 
-        # masih ada target tujuan
-        if (len(self.path) > 1):
-            self.can_move = False
-            self.target_pos = self.path[1].position
+            # masih ada target tujuan
+            if (len(self.path) > 1):
+                self.can_move = False
+                self.target_pos = self.path[1].position
 
-            if self.is_arrive():
-                self.path.pop(0)
+                if self.is_arrive():
+                    self.path.pop(0)
+            return
+
+        # particle boost
+        direction = Vector2D.Subtraction(self.position, self.target_pos).normalize()
+        # directiony = Vector2D.MultiplyByPointY(direction, random.randint(5, 10))
+        offset = self.position + (direction * 7)
+        self.particle.add_particle(offset, direction)
+        self.particle.add_particle(offset, direction)
+        # self.particle.add_particle(offset, directiony)
 
         self.position = Vector2D.MoveTowards(self.position, self.target_pos, self.speed * Clock.delta_time)
         # print(f"{self.rect.center} - {self.target_pos} - {self.position}")
@@ -66,6 +88,7 @@ class Rocket(pygame.sprite.Sprite):
         # dikurang 90 biar angleny mulai dari kanan
         self.image = pygame.transform.rotate(self.img, -angle - 90)
 
+        self.particle.emit()
         self.draw_radar()
         self.draw_path()
         self.draw_arrow()
@@ -148,10 +171,13 @@ class Rocket(pygame.sprite.Sprite):
         timer = Vector2D.EaseOutCubic(self.timer_radar)
         radius = timer * self.radar_radius
         width = (1 - timer) * self.radar_radius
+        color = self.radar_color["default"]
+        if (GameManager.open_planet_goal):
+            color = self.radar_color["goal"]
 
         pygame.draw.circle(
             Camera.instance.display,
-            (100, 100, 0),
+            color,
             Camera.instance.world_to_screen_point(self.position),
             radius = radius,
             width = math.ceil(width)

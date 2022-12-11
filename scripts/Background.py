@@ -25,7 +25,7 @@ class Background:
     def init(cls):
         cls.width = Window.base_resolution[0] * 2
         cls.height = Window.base_resolution[1] * 2
-        for _ in range(math.ceil(Window.scaled_resolution[0] // 1.5)):
+        for _ in range(Window.base_resolution[0] + Window.base_resolution[1]):
             x = random.randint(-cls.width, cls.width)
             y = random.randint(-cls.height, cls.height)
             z = random.random() / 2
@@ -48,8 +48,8 @@ class Background:
     def update(cls):
         for i in range(len(cls.stars) - 1):
             # update movement
-            cls.stars[i].position.x += 0.01
-            cls.stars[i].position.y += 0.01
+            cls.stars[i].position.x += 0.1
+            cls.stars[i].position.y += 0.1
 
             if (cls.stars[i].position.x >= cls.width and
                 cls.stars[i].position.y >= cls.height):

@@ -9,6 +9,7 @@ from .Background import Background
 from .objek.rocket import Rocket
 from .PlanetManager import PlanetManager
 from .GameManager import GameManager
+from .Vector import Vector2D
 
 class Menu:
     # 0 = default menu
@@ -16,11 +17,45 @@ class Menu:
     scene = 0
     init_game = False
 
+    waves = []
+
     @classmethod
     def input(cls, events):
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP:
                 cls.change_menu()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                cls.create_wave()
+
+    @classmethod
+    def create_wave(cls):
+        position = Camera.instance.screen_to_world_point(pygame.mouse.get_pos())
+        cls.waves.append([position, 0, 30])
+
+    @classmethod
+    def draw_click(cls):
+        done = 0
+        for i in range(len(cls.waves)):
+            cls.waves[i][1] += Clock.delta_time
+
+            if (cls.waves[i][1] > 1):
+                done += 1
+                continue
+
+            # Radius dan width circle
+            timer = Vector2D.EaseOutCubic(cls.waves[i][1])
+            radius = timer * cls.waves[i][2]
+            width = (1 - timer) * cls.waves[i][2]
+
+            pygame.draw.circle(
+                Camera.instance.display,
+                (100, 100, 100),
+                Camera.instance.world_to_screen_point(cls.waves[i][0]),
+                radius = radius,
+                width = math.ceil(width)
+            )
+        if (done > 0):
+            cls.waves = [wave for wave in cls.waves if wave[1] <= 1]
 
     @classmethod
     def change_menu(cls):
@@ -30,10 +65,12 @@ class Menu:
             cls.scene = 0
             GameManager.game_state = 0
             cls.init_game = False
+            Camera.instance.empty()
 
     @classmethod
     def update(cls):
         Background.update()
+        cls.draw_click()
         if (cls.scene == 0):
             cls.scene_default()
         elif (cls.scene == 1):

@@ -44,6 +44,14 @@ class Vector2D(Vector2):
         return Vector2(current[0] - target[0], current[1] - target[1])
 
     @classmethod
+    def MultiplyByPointX(cls, current, point):
+        return Vector2(current[0] * point, current[1])
+
+    @classmethod
+    def MultiplyByPointY(cls, current, point):
+        return Vector2(current[0], current[1] * point)
+
+    @classmethod
     def PerpendicularCounterClockwise(cls, current):
         return Vector2(-current[1], current[0])
     
@@ -53,14 +61,14 @@ class Vector2D(Vector2):
 
     @classmethod
     def MoveTowards(cls, current, target, maxDelta):
-        vector = Vector2D.Subtraction(target, current)
-        magnitude = get_magnitude(vector[0], vector[1])
+        direction = Vector2D.Subtraction(target, current)
+        magnitude = get_magnitude(direction[0], direction[1])
 
         if (magnitude <= maxDelta or magnitude == 0):
             return target
         
-        x = current[0] + vector[0] / magnitude * maxDelta
-        y = current[1] + vector[1] / magnitude * maxDelta
+        x = current[0] + direction[0] / magnitude * maxDelta
+        y = current[1] + direction[1] / magnitude * maxDelta
         return Vector2(x, y)
     
     @classmethod
