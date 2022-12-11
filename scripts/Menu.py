@@ -1,5 +1,5 @@
 
-import pygame, math
+import pygame, math, random
 
 from .Font import Font
 from .Clock import Clock
@@ -75,8 +75,8 @@ class Menu:
         # Neutral | image path , jumlah
         PlanetManager.instance.add_image('assets/planet.png', -1)
         # Resource
-        PlanetManager.instance.add_image('assets/mars.png', 1)
-        PlanetManager.instance.add_image('assets/neptune.png', 0)
+        PlanetManager.instance.add_image('assets/mars.png', random.randint(10, 40))
+        PlanetManager.instance.add_image('assets/neptune.png', random.randint(10, 20))
         # Goal
         PlanetManager.instance.add_image('assets/earth.png', -1)
 
