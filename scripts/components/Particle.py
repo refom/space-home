@@ -1,6 +1,6 @@
 
 import random, pygame
-from .camera import Camera
+from ..manager.camera import Camera
 
 class Particle:
     def __init__(self, color, lifetime, radius = (3, 5)):

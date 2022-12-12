@@ -1,8 +1,8 @@
 
 import pygame, math, random
-from ..Clock import Clock
-from ..Vector import Vector2D
-from ..PlanetManager import PlanetManager
+from ..components.Clock import Clock
+from ..components.Vector import Vector2D
+from ..manager.PlanetManager import PlanetManager
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, groups):

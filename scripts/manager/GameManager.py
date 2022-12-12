@@ -1,9 +1,9 @@
 
 import pygame, random, math
-from .Window import Window
-from .Font import Font
-from .Clock import Clock
-from .objek.enemy import Enemy
+from ..Window import Window
+from ..components.Font import Font
+from ..components.Clock import Clock
+from ..objek.enemy import Enemy
 from .camera import Camera
 from .PlanetManager import PlanetManager
 
@@ -21,7 +21,7 @@ class GameManager:
 
     resource_left = None
     open_planet_goal = False
-    win = False
+
     # 0 = normal
     # 1 = win
     # 2 = lose

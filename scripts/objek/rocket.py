@@ -1,14 +1,14 @@
 
 import pygame, math, random
-from ..Clock import Clock
-from ..camera import Camera
-from ..Vector import Vector2D
-from ..GameManager import GameManager
-from ..PlanetManager import PlanetManager
-from ..Particle import Particle
-from ..music import Music
+from ..components.Clock import Clock
+from ..manager.camera import Camera
+from ..components.Vector import Vector2D
+from ..manager.GameManager import GameManager
+from ..manager.PlanetManager import PlanetManager
+from ..components.Particle import Particle
+from ..components.music import Music
 
-from ..AStar import AStar
+from ..components.AStar import AStar
 
 class Rocket(pygame.sprite.Sprite):
     def __init__(self, pos, groups):

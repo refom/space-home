@@ -1,8 +1,8 @@
 
 import random, math
-from .objek.planet import Planet
+from ..objek.planet import Planet
 from .camera import Camera
-from .Vector import Vector2D
+from ..components.Vector import Vector2D
 
 class PlanetManager:
     # Singleton

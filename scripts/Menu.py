@@ -1,15 +1,15 @@
 
 import pygame, math, random
 
-from .Font import Font
-from .Clock import Clock
-from .camera import Camera
+from .components.Font import Font
+from .components.Clock import Clock
+from .manager.camera import Camera
 from .Window import Window
-from .Background import Background
+from .components.Background import Background
 from .objek.rocket import Rocket
-from .PlanetManager import PlanetManager
-from .GameManager import GameManager
-from .Vector import Vector2D
+from .manager.PlanetManager import PlanetManager
+from .manager.GameManager import GameManager
+from .components.Vector import Vector2D
 
 class Menu:
     # 0 = default menu

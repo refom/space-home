@@ -1,7 +1,7 @@
 
 import pygame, sys
 from .Config import Config
-from .music import Music
+from .components.music import Music
 
 class Window:
     base_resolution = None

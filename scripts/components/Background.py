@@ -1,7 +1,7 @@
 
 import pygame, random, math
-from .Window import Window
-from .camera import Camera
+from ..Window import Window
+from ..manager.camera import Camera
 from .Vector import Vector2D
 
 # stars berisi posisi bintang, ukurannya, jauhnya, dan warna
