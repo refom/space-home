@@ -6,6 +6,7 @@ from ..Vector import Vector2D
 from ..GameManager import GameManager
 from ..PlanetManager import PlanetManager
 from ..Particle import Particle
+from ..music import Music
 
 from ..AStar import AStar
 
@@ -68,9 +69,13 @@ class Rocket(pygame.sprite.Sprite):
 
                 if self.is_arrive():
                     self.path.pop(0)
+                return
+            
+            Music.stop_thruster()
             return
 
         # particle boost
+        Music.start_thruster()
         direction = Vector2D.Subtraction(self.position, self.target_pos).normalize()
         # directiony = Vector2D.MultiplyByPointY(direction, random.randint(5, 10))
         offset = self.position + (direction * 7)
@@ -111,6 +116,7 @@ class Rocket(pygame.sprite.Sprite):
         # apakah planet goal
         if (self.current_planet == PlanetManager.instance.planet_goal):
             # win
+            Music.win_sound()
             GameManager.win_condition()
             self.active = False
             return
@@ -118,6 +124,7 @@ class Rocket(pygame.sprite.Sprite):
         # apakah ada enemy sampai di planet ini
         if (self.current_planet.is_enemy_arrive):
             # dead
+            Music.lose_sound()
             GameManager.lose_condition()
             self.active = False
             return
@@ -134,6 +141,7 @@ class Rocket(pygame.sprite.Sprite):
         if (self.timer_resource >= self.current_planet.resource_cooldown):
             # resource diambil
             print("resource diambil")
+            Music.load_resource_sound()
             self.current_planet.collected = True
             self.timer_resource = 0
             GameManager.resource_collected()

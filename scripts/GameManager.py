@@ -10,9 +10,9 @@ from .PlanetManager import PlanetManager
 class GameManager:
     player = None
     # start time in seconds
-    enemy_start_time = 40
+    enemy_start_time = 25
     enemy_start_time_counter = 0
-    enemy_limit_time = 20
+    enemy_limit_time = 10
 
     enemy_timer_lose = 0.3
     enemy_timer = 0

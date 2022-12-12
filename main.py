@@ -6,12 +6,12 @@ from scripts.Menu import Menu
 from scripts.camera import Camera
 from scripts.Background import Background
 from scripts.PlanetManager import PlanetManager
-from scripts.music import music
+from scripts.music import Music
 
 Window.init()
 Clock.init()
 Font.init()
-music()
+Music.music()
 
 camera = Camera()
 planet_manager = PlanetManager()

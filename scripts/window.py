@@ -1,7 +1,7 @@
 
 import pygame, sys
 from .Config import Config
-from .music import click_sound
+from .music import Music
 
 class Window:
     base_resolution = None
@@ -39,7 +39,7 @@ class Window:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONUP:
-                click_sound()
+                Music.click_sound()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()

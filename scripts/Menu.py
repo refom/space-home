@@ -24,7 +24,7 @@ class Menu:
         for event in events:
             if event.type == pygame.MOUSEBUTTONUP:
                 cls.change_menu()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONUP:
                 cls.create_wave()
 
     @classmethod
@@ -116,8 +116,8 @@ class Menu:
         # Neutral | image path , jumlah
         PlanetManager.instance.add_image('assets/planet.png', -1)
         # Resource
-        PlanetManager.instance.add_image('assets/mars.png', random.randint(10, 40))
-        PlanetManager.instance.add_image('assets/neptune.png', random.randint(10, 20))
+        PlanetManager.instance.add_image('assets/mars.png', random.randint(25, 40))
+        PlanetManager.instance.add_image('assets/neptune.png', random.randint(15, 30))
         # Goal
         PlanetManager.instance.add_image('assets/earth.png', -1)
 
