@@ -69,7 +69,7 @@ class PlanetManager:
     
     def get_neutral_planet(self):
         while True:
-            index = random.randint(0, len(self.planets))
+            index = random.randint(0, len(self.planets) - 1)
             if (self.planets[index] not in self.planet_resources):
                 return self.planets[index]
 
