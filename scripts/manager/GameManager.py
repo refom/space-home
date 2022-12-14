@@ -31,6 +31,10 @@ class GameManager:
     back_active = False
 
     panel_rect = None
+    panel_color = {
+        "lose": (51, 30, 42),
+        "win": (25, 45, 28),
+    }
 
     icon_position = None
     icon_image_source = None
@@ -146,9 +150,12 @@ class GameManager:
 
     @classmethod
     def scene_game_over(cls):
+        color = cls.panel_color["win"]
+        if (cls.game_state == 2):
+            color = cls.panel_color["lose"]
         pygame.draw.rect(
             Window.display,
-            (24, 29, 49),
+            color,
             cls.panel_rect,
             border_radius = 17
         )

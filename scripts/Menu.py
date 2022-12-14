@@ -132,6 +132,7 @@ class Menu:
     def init_gameplay(cls):
         cls.init_game = True
 
+        cls.info_timer = 0
         mode = Playmode.modes[Playmode.selected_mode]
         Camera.instance.empty()
         PlanetManager.instance.init()

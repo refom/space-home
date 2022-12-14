@@ -79,6 +79,24 @@ class Playmode:
                 "enemy-limit-time": 1,
             },
         },
+        # {
+        #     "name": "Playtest",
+        #     "priority": 0,
+        #     "image_source": None,
+        #     "image": None,
+        #     "position": [0,0],
+        #     "size": 0,
+            
+        #     "rocket-speed": 200,
+        #     "resource-amount": [(1, 1),(1, 1)],
+        #     "resource-cooldown": [0.1,0.1],
+        #     "enemy-stats": {
+        #         "enemy-speed": 50,
+        #         "enemy-cooldown-move": [5,7],
+        #         "enemy-start-time": 5,
+        #         "enemy-limit-time": 5,
+        #     },
+        # },
     ]
     
     selected_mode = 1
@@ -107,7 +125,8 @@ class Playmode:
             pygame.image.load('assets/mars.png').convert_alpha(),
             pygame.image.load('assets/earth.png').convert_alpha(),
             pygame.image.load('assets/enemy_ship.png').convert_alpha(),
-            pygame.image.load('assets/rocket.png').convert_alpha()
+            pygame.image.load('assets/rocket.png').convert_alpha(),
+            # pygame.image.load('assets/neptune.png').convert_alpha(),
         ]
 
         priority = -1
