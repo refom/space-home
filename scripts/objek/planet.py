@@ -4,7 +4,7 @@ from ..manager.camera import Camera
 from ..components.Vector import Vector2D
 
 class Planet(pygame.sprite.Sprite):
-    def __init__(self, pos, img_path, groups, collider=(10, 10)):
+    def __init__(self, pos, img_path, groups, collider=(10, 10), resource_cooldown = 0):
         super().__init__(groups)
         self.image_source = pygame.image.load(img_path).convert_alpha()
         self.image = self.image_source.copy()
@@ -23,7 +23,7 @@ class Planet(pygame.sprite.Sprite):
         self.is_enemy_exist = False
         self.is_enemy_arrive = False
         
-        self.resource_cooldown = 0
+        self.resource_cooldown = resource_cooldown
         self.angle = 0
         self.rotate_direction = 0.02 if (random.random() > 0.5) else -0.02
         self.position = Vector2D(pos)
@@ -89,9 +89,4 @@ class Planet(pygame.sprite.Sprite):
             Camera.instance.world_to_screen_point(self.position),
             radius = radius
         )
-    
-    def set_cooldown(self, index):
-        if (index == 1):
-            self.resource_cooldown = 3
-        if (index == 2):
-            self.resource_cooldown = 5
+

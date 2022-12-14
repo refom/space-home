@@ -1,30 +1,38 @@
 
 import pygame, math, random
 
-from .components.Font import Font
-from .components.Clock import Clock
-from .manager.camera import Camera
 from .Window import Window
-from .components.Background import Background
 from .objek.rocket import Rocket
+
+from .manager.camera import Camera
 from .manager.PlanetManager import PlanetManager
 from .manager.GameManager import GameManager
+
+from .components.Playmode import Playmode
+from .components.Font import Font
+from .components.Clock import Clock
+from .components.Background import Background
 from .components.Vector import Vector2D
+
 
 class Menu:
     # 0 = default menu
     # 1 = gameplay
     scene = 0
     init_game = False
+    title = None
 
     waves = []
 
     @classmethod
+    def init(cls):
+        cls.title = pygame.image.load('assets/logo.png').convert_alpha()
+        Playmode.init()
+
+    @classmethod
     def input(cls, events):
         for event in events:
-            if event.type == pygame.MOUSEBUTTONUP:
-                cls.change_menu()
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 cls.create_wave()
 
     @classmethod
@@ -79,16 +87,20 @@ class Menu:
     @classmethod
     def scene_default(cls):
         cls.draw_text_menu()
+        is_change_menu = Playmode.input()
+        Playmode.update()
+
+        if (is_change_menu):
+            cls.change_menu()
 
     @classmethod
     def draw_text_menu(cls):
-        title = pygame.image.load('assets/logo.png')
-        title_rect = title.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/3))
-        Window.display.blit(title, title_rect)
+        title_rect = cls.title.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/3))
+        Window.display.blit(cls.title, title_rect)
 
-        click = Font.head.render("Click anywhere to Play", False, (255,255,255))
-        click_rect = click.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/2))
-        Window.display.blit(click, click_rect)
+        # click = Font.head.render("Click anywhere to Play", False, (255,255,255))
+        # click_rect = click.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/2))
+        # Window.display.blit(click, click_rect)
         
         quit = Font.head.render("Press ESC to quit the game", False, (255,255,255))
         quit_rect = quit.get_rect(center = (Window.display.get_width()/2, Window.display.get_height()/2 + 250 ))
@@ -99,25 +111,39 @@ class Menu:
         if (not cls.init_game):
             cls.init_gameplay()
         
-        GameManager.update_enemy()
-        Camera.instance.update()
-        Camera.instance.custom_draw(GameManager.player)
         cls.draw_text_gameplay()
 
+        GameManager.update_enemy()
+        Camera.instance.update()
+
+        Camera.instance.custom_draw(GameManager.player)
         if (GameManager.game_state != 0):
+            is_change_menu = GameManager.input()
             GameManager.scene_game_over()
+
+            if (is_change_menu):
+                cls.change_menu()
 
     @classmethod
     def init_gameplay(cls):
         cls.init_game = True
 
+        mode = Playmode.modes[Playmode.selected_mode]
         Camera.instance.empty()
         PlanetManager.instance.init()
         # Neutral | image path , jumlah
         PlanetManager.instance.add_image('assets/planet.png', -1)
         # Resource
-        PlanetManager.instance.add_image('assets/mars.png', random.randint(25, 40))
-        PlanetManager.instance.add_image('assets/neptune.png', random.randint(15, 30))
+        PlanetManager.instance.add_image(
+            'assets/mars.png',
+            random.randint(mode["resource-amount"][0][0], mode["resource-amount"][0][1]),
+            mode["resource-cooldown"][0]
+        )
+        PlanetManager.instance.add_image(
+            'assets/neptune.png',
+            random.randint(mode["resource-amount"][1][0], mode["resource-amount"][1][1]),
+            mode["resource-cooldown"][1]
+        )
         # Goal
         PlanetManager.instance.add_image('assets/earth.png', -1)
 
@@ -127,8 +153,18 @@ class Menu:
             map_size = (Window.base_resolution[0] * 3, Window.base_resolution[1] * 3),
             try_length = 5
         )
-        rocket = Rocket(PlanetManager.instance.get_neutral_planet().position, Camera.instance)
-        GameManager.init(rocket)
+
+        rocket = Rocket(
+            PlanetManager.instance.get_neutral_planet().position,
+            mode["rocket-speed"],
+            Camera.instance
+        )
+        GameManager.init(rocket, mode["name"], mode["enemy-stats"], mode["image_source"])
+        print(f"Selected Mode: {mode['name']}")
+        print(f"Rocket Speed: {mode['rocket-speed']}")
+        print(f"Resource Amount: {mode['resource-amount']}")
+        print(f"Resource Cooldown: {mode['resource-cooldown']}")
+        print(f"Enemy stats: {mode['enemy-stats']}")
 
         # Start clock
         Clock.start_time()

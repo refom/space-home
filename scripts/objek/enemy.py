@@ -5,7 +5,7 @@ from ..components.Vector import Vector2D
 from ..manager.PlanetManager import PlanetManager
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, groups, speed, cooldown_move = [3, 7]):
         super().__init__(groups)
         self.img = pygame.image.load('assets/enemy_ship.png').convert_alpha()
         self.image = self.img.copy()
@@ -16,8 +16,8 @@ class Enemy(pygame.sprite.Sprite):
         self.target_pos = Vector2D(pos)
         self.current_planet = None
 
-        self.speed = 100
-        self.cooldown_move_range = [3, 7]
+        self.speed = speed
+        self.cooldown_move_range = cooldown_move
         self.cooldown_move = random.randint(self.cooldown_move_range[0], self.cooldown_move_range[1])
         self.cooldown_timer = 0
         self.can_move = True
@@ -70,10 +70,10 @@ class Enemy(pygame.sprite.Sprite):
         planets = PlanetManager.instance.get_closest_planets(self.position)
         # print(f"Enemy planets option: {[planet.position for planet in planets]}")
         new_planet = None
-        for planet in planets:
-            if (planet.is_enemy_exist or planet == PlanetManager.instance.planet_goal):
+        for idx in range(len(planets) - 1):
+            if (planets[idx].is_enemy_exist or planets[idx] == PlanetManager.instance.planet_goal):
                 continue
-            new_planet = planet
+            new_planet = planets[idx]
             break
 
         if (new_planet == None):

@@ -15,6 +15,8 @@ def get_magnitude(x, y):
 def lerp(current, target, delta):
     return current + delta * (target - current)
 
+def clamp(value, min_value, max_value):
+    return max(min_value, min(value, max_value))
 
 class Vector2D(Vector2):
     @classmethod
@@ -73,7 +75,8 @@ class Vector2D(Vector2):
     
     @classmethod
     def LerpPoint(cls, current, target, delta):
-        return current + delta * (target - current)
+        new_delta = clamp(delta, 0, 1)
+        return current + new_delta * (target - current)
 
     # @classmethod
     # def Lerp(cls, current, target, delta):

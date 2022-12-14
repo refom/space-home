@@ -11,7 +11,7 @@ from ..components.music import Music
 from ..components.AStar import AStar
 
 class Rocket(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+    def __init__(self, pos, speed, groups):
         super().__init__(groups)
         self.img = pygame.image.load('assets/rocket.png').convert_alpha()
         self.image = self.img.copy()
@@ -21,12 +21,13 @@ class Rocket(pygame.sprite.Sprite):
         self.position = Vector2D(pos)
         self.target_pos = Vector2D(pos)
         self.is_click = False
-        self.can_move = True
+        self.can_move = False
 
         self.path = []
         self.last_path = None
         self.current_planet = None
-        self.speed = 100
+        self.speed = speed
+        self.radar_speed = 50
         self.radar_color = {
             "default": (100, 100, 0),
             "goal": (50, 205, 50),
@@ -167,7 +168,7 @@ class Rocket(pygame.sprite.Sprite):
 
     def draw_radar(self):
         if (self.timer_radar_cooldown > 0):
-            self.timer_radar_cooldown -= self.speed * Clock.delta_time
+            self.timer_radar_cooldown -= self.radar_speed * Clock.delta_time
             return
 
         self.timer_radar += Clock.delta_time

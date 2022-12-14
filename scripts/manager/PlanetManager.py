@@ -8,9 +8,10 @@ class PlanetManager:
     # Singleton
     instance = None
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.image_path = []
         self.resource_amount = []
+        self.resource_cooldown = []
 
         self.planets = []
         self.planet_resources = []
@@ -42,7 +43,7 @@ class PlanetManager:
         if (self.resource_amount[index] == 0):
             index = 0
 
-        planet = Planet(pos, self.image_path[index][0], self.groups, (32, 32))
+        planet = Planet(pos, self.image_path[index][0], self.groups, (32, 32), self.resource_cooldown[index])
         planet.angle = random.randint(-180, 180)
 
         add_to_list = self.selecting_planet(planet, index)
@@ -58,14 +59,14 @@ class PlanetManager:
         # jika planet resource
         elif (index != 0 and index != len(self.image_path) - 1):
             planet.is_resource = True
-            planet.set_cooldown(index)
             self.planet_resources.append(planet)
             self.resource_amount[index] -= 1
         return True
 
-    def add_image(self, path, amount):
+    def add_image(self, path, amount, resource_cooldown = 0):
         self.image_path.append([path, amount])
         self.resource_amount.append(amount)
+        self.resource_cooldown.append(resource_cooldown)
     
     def get_neutral_planet(self):
         while True:
