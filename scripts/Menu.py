@@ -24,6 +24,10 @@ class Menu:
 
     waves = []
 
+    info_active = True
+    info_time = 10
+    info_timer = 0
+
     @classmethod
     def init(cls):
         cls.title = pygame.image.load('assets/logo.png').convert_alpha()
@@ -176,8 +180,19 @@ class Menu:
         Window.display.blit(fps, fps_rect)
 
         resource = Font.text.render(f"Resource Left : {GameManager.resource_left}", False, (255,255,255))
-        resource_rect = fps.get_rect(topleft = (20, 20))
+        resource_rect = resource.get_rect(topleft = (20, 20))
         Window.display.blit(resource, resource_rect)
+
+        if (cls.info_timer <= cls.info_time):
+            cls.info_timer += Clock.delta_time
+            text1 = "You're stranded!"
+            text2 = "Fix your radar by collecting resource so you can return to your home!"
+            info_text1 = Font.text.render(text1, False, (255,255,255))
+            info_text2 = Font.text.render(text2, False, (255,255,255))
+            info_rect1 = info_text1.get_rect(center = (Window.display.get_width() / 2, (Window.display.get_height() / 4) * 3))
+            info_rect2 = info_text2.get_rect(center = (Window.display.get_width() / 2, (Window.display.get_height() / 4) * 3 + 25))
+            Window.display.blit(info_text1, info_rect1)
+            Window.display.blit(info_text2, info_rect2)
 
         if (GameManager.game_state != 0): return
         times_sec = (Clock.get_current_time_s() % 60)
